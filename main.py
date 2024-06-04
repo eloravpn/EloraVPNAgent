@@ -104,7 +104,7 @@ def main(args=None):
 
 
 def run_xray_knife():
-    subprocess.run(["./tools/xray-knife --version"])
+    subprocess.call("./tools/xray-knife --version")
 
 
 def send_csv_records(test_url: str):
