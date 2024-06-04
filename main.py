@@ -2,6 +2,7 @@
 import csv
 import getopt
 import json
+import os
 import re
 import subprocess
 import sys
@@ -12,6 +13,7 @@ import requests as requests
 
 import config
 
+abspath = os.path.abspath(__file__)
 
 def get_valid_ip():
     ip = "192.168.1.1"
@@ -104,7 +106,7 @@ def main(args=None):
 
 
 def run_xray_knife():
-    subprocess.call("./tools/xray-knife --version")
+    subprocess.call(abspath+"/tools/xray-knife --version")
 
 
 def send_csv_records(test_url: str):
