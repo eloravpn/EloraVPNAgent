@@ -37,19 +37,19 @@ def get_auth_token():
 
 
 def send_test_result(
-    access_token_: str,
-    url: str,
-    client_name: str,
-    client_ip: str,
-    test_url: str,
-    remark_: str,
-    port_: int,
-    domain_: str,
-    sni: str,
-    delay: int,
-    ping: int,
-    develop: bool = False,
-    success: bool = True,
+        access_token_: str,
+        url: str,
+        client_name: str,
+        client_ip: str,
+        test_url: str,
+        remark_: str,
+        port_: int,
+        domain_: str,
+        sni: str,
+        delay: int,
+        ping: int,
+        develop: bool = False,
+        success: bool = True,
 ):
     payload = json.dumps(
         {
@@ -107,7 +107,7 @@ def main(args=None):
 
 
 def run_xray_knife():
-    subprocess.run(abspath + "/tools/xray-knife --version")
+    subprocess.run(abspath + "/tools/xray-knife --version", shell=True)
 
 
 def send_csv_records(test_url: str):
