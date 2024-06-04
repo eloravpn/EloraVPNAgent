@@ -3,6 +3,7 @@ import csv
 import getopt
 import json
 import re
+import subprocess
 import sys
 from datetime import datetime
 from urllib.parse import unquote
@@ -91,13 +92,19 @@ def cli(args):
         if opt in ("-u", "--url"):
             test_url = arg
 
-    send_csv_records(test_url=test_url)
+    run_xray_knife()
+
+    # send_csv_records(test_url=test_url)
 
 
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
     cli(args)
+
+
+def run_xray_knife():
+    subprocess.run(["./tools/xray-knife --version"])
 
 
 def send_csv_records(test_url: str):
@@ -137,7 +144,7 @@ def send_csv_records(test_url: str):
             sni="",
             delay=int(delay),
             ping=0,
-            success= success
+            success=success,
         )
 
 
