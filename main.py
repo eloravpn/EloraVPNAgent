@@ -78,6 +78,7 @@ def send_test_result(
 
 def get_configs(base_sub_url: str, override_domain: str, q: str, plain: bool = True):
     full_url = f"{base_sub_url}?address={override_domain}&q={q}&plain={plain}"
+    print(f"Try to get configs by {full_url}")
     response = requests.request("GET", full_url, timeout=15)
     return response.text
 
@@ -131,7 +132,7 @@ def run_test():
         for i in range(2, len(row)):
             now = time.time()
             domain = row[i]
-            print(f"Run text for {row[i]} by {domain}")
+            print(f"Run text for {row[i]} by {base_sub_url}")
             configs = get_configs(base_sub_url, domain, q)
 
             configs_file_name = get_relative_file_path(
