@@ -13,6 +13,7 @@ requests.packages.urllib3.util.connection.HAS_IPV6 = False
 CSV_FILE_PATH = config("CSV_FILE_PATH", default="./valid_example.csv")
 SUBS_CSV_FILE_PATH = config("SUBS_CSV_FILE_PATH", default="./subs_example.csv")
 CONFIGS_DIR = config("CONFIGS_DIR", default="./configs")
+CONFIGS_Q = config("CONFIGS_Q", default="T1")
 RESULTS_DIR = config("RESULTS_DIR", default="./results")
 TEST_URL = config("TEST_URL", default="https://www.google.com/generate_204")
 

@@ -121,7 +121,7 @@ def get_relative_file_path(file_path: str):
 def run_test():
     file = open(get_relative_file_path(config.SUBS_CSV_FILE_PATH))
     csvreader = csv.reader(file)
-    q = "t1"
+    q = config.CONFIGS_Q
 
     # next(csvreader)
     for idx, row in enumerate(csvreader):
@@ -145,7 +145,6 @@ def run_test():
             )
 
             print(f"Test results file: {test_output_file_name}")
-
 
             file = open(configs_file_name, "w")
             file.write(configs)
