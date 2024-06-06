@@ -137,11 +137,12 @@ def run_test():
             configs_file_name = get_relative_file_path(
                 f"{config.CONFIGS_DIR}/config-{domain}-{now}.txt"
             )
+
             test_output_file_name = get_relative_file_path(
                 f"{config.RESULTS_DIR}/test-results-{domain}-{now}.txt"
             )
 
-            file = open(test_output_file_name, "w")
+            file = open(configs_file_name, "w")
             file.write(configs)
             file.close()
 
