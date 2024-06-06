@@ -138,9 +138,14 @@ def run_test():
                 f"{config.CONFIGS_DIR}/config-{domain}-{now}.txt"
             )
 
+            print(f"Configs file: {configs_file_name}")
+
             test_output_file_name = get_relative_file_path(
                 f"{config.RESULTS_DIR}/test-results-{domain}-{now}.txt"
             )
+
+            print(f"Test results file: {test_output_file_name}")
+
 
             file = open(configs_file_name, "w")
             file.write(configs)
