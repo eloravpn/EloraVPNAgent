@@ -111,8 +111,15 @@ def main(args=None):
     cli(args)
 
 
+def get_relative_file_path(file_path: str):
+    if file_path.startswith("./"):
+        return file_path.replace(abspath, "./")
+    else:
+        return file_path
+
+
 def run_test():
-    file = open(config.SUBS_CSV_FILE_PATH)
+    file = open(get_relative_file_path(config.SUBS_CSV_FILE_PATH))
     csvreader = csv.reader(file)
     q = "t1"
 
@@ -127,8 +134,10 @@ def run_test():
             print(f"Run text for {row[i]} by {domain}")
             configs = get_configs(base_sub_url, domain, q)
 
-            configs_file_name = f"{config.CONFIGS_DIR}/config-{domain}-{now}.txt"
-            test_output_file_name = (
+            configs_file_name = get_relative_file_path(
+                f"{config.CONFIGS_DIR}/config-{domain}-{now}.txt"
+            )
+            test_output_file_name = get_relative_file_path(
                 f"{config.RESULTS_DIR}/test-results-{domain}-{now}.txt"
             )
 
@@ -143,8 +152,7 @@ def run_test():
             )
 
             send_csv_records(
-                test_url=config.TEST_URL,
-                test_result_file=test_output_file_name
+                test_url=config.TEST_URL, test_result_file=test_output_file_name
             )
 
 
