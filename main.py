@@ -2,11 +2,10 @@
 import csv
 import getopt
 import json
-import os
 import re
 import subprocess
 import sys
-from datetime import datetime
+import time
 from urllib.parse import unquote
 
 import requests as requests
@@ -37,19 +36,19 @@ def get_auth_token():
 
 
 def send_test_result(
-        access_token_: str,
-        url: str,
-        client_name: str,
-        client_ip: str,
-        test_url: str,
-        remark_: str,
-        port_: int,
-        domain_: str,
-        sni: str,
-        delay: int,
-        ping: int,
-        develop: bool = False,
-        success: bool = True,
+    access_token_: str,
+    url: str,
+    client_name: str,
+    client_ip: str,
+    test_url: str,
+    remark_: str,
+    port_: int,
+    domain_: str,
+    sni: str,
+    delay: int,
+    ping: int,
+    develop: bool = False,
+    success: bool = True,
 ):
     payload = json.dumps(
         {
@@ -73,6 +72,14 @@ def send_test_result(
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
+    if response and response.status_code == 200:
+        print(f"Success send test result for {remark_}")
+
+
+def get_configs(base_sub_url: str, override_domain: str, q: str, plain: bool = True):
+    full_url = f"{base_sub_url}?address={override_domain}&q={q}&plain={plain}"
+    response = requests.request("GET", full_url, timeout=15)
+    return response.text
 
 
 def cli(args):
@@ -95,9 +102,7 @@ def cli(args):
         if opt in ("-u", "--url"):
             test_url = arg
 
-    run_xray_knife()
-
-    # send_csv_records(test_url=test_url)
+    run_test()
 
 
 def main(args=None):
@@ -106,12 +111,53 @@ def main(args=None):
     cli(args)
 
 
-def run_xray_knife():
-    subprocess.run(abspath + "/tools/xray-knife --version", shell=True)
+def run_test():
+    file = open(config.SUBS_CSV_FILE_PATH)
+    csvreader = csv.reader(file)
+    q = "t1"
+
+    # next(csvreader)
+    for idx, row in enumerate(csvreader):
+        print(f"There are {len(row)} columns in row#{idx}")
+        base_sub_url = row[1]
+
+        for i in range(2, len(row)):
+            now = time.time()
+            domain = row[i]
+            print(f"Run text for {row[i]} by {domain}")
+            configs = get_configs(base_sub_url, domain, q)
+
+            configs_file_name = f"{config.CONFIGS_DIR}/config-{domain}-{now}.txt"
+            test_output_file_name = (
+                f"{config.RESULTS_DIR}/test-results-{domain}-{now}.txt"
+            )
+
+            file = open(test_output_file_name, "w")
+            file.write(configs)
+            file.close()
+
+            run_xray_knife(
+                configs_file=configs_file_name,
+                result_file=test_output_file_name,
+                test_url=config.TEST_URL,
+            )
+
+            send_csv_records(
+                test_url=config.TEST_URL,
+                test_result_file=test_output_file_name
+            )
 
 
-def send_csv_records(test_url: str):
-    file = open(config.CSV_FILE_PATH)
+def run_xray_knife(configs_file: str, result_file: str, test_url: str):
+    subprocess.run(
+        abspath
+        + f"/tools/xray-knife net http -f {configs_file} -x csv -s -u {test_url} -o  {result_file}",
+        shell=True,
+    )
+
+
+def send_csv_records(test_url: str, test_result_file: str):
+    file = open(test_result_file)
     csvreader = csv.reader(file)
     api_url = config.ELORA_BASE_API_URL + "/api/monitoring-results/"
     public_ip = get_valid_ip()
