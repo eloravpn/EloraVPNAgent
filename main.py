@@ -114,7 +114,7 @@ def main(args=None):
 
 def get_relative_file_path(file_path: str):
     if file_path.startswith("./"):
-        return file_path.replace("./", f"/{abspath}")
+        return file_path.replace("./", f"{abspath}/")
     else:
         return file_path
 
